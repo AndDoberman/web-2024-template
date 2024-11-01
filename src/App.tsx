@@ -10,7 +10,6 @@ import {
   ListItemText,
   ListItemSecondaryAction,
   IconButton,
-  Checkbox,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -21,11 +20,20 @@ interface Todo {
   done: boolean;
 }
 
+const PageBackground = styled.div`
+  background-color: #e3f2fd;
+  min-height: 100vh;
+  padding: 20px;
+`;
+
 const AppContainer = styled.div`
   max-width: 600px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 `;
 
 const StyledButton = styled(Button)`
@@ -106,69 +114,82 @@ function App() {
   };
 
   return (
-    <AppContainer>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Todo List
-      </Typography>
-      <TextField
-        fullWidth
-        variant="outlined"
-        label="New Todo"
-        value={newTodo}
-        onChange={(e) => setNewTodo(e.target.value)}
-        onKeyPress={(e) => e.key === "Enter" && handleAddTodo()}
-        autoFocus // Add this line to enable autofocus
-      />
-      <StyledButton
-        variant="contained"
-        color="primary"
-        fullWidth
-        onClick={handleAddTodo}
-      >
-        Add Todo
-      </StyledButton>
-      <List>
-        {todos.map((todo) => (
-          <ListItem key={todo.id} dense>
-            <Checkbox
-              edge="start"
-              checked={todo.done}
-              onChange={() => handleToggleTodo(todo.id)}
-            />
-            {editingId === todo.id ? (
-              <TextField
-                fullWidth
-                value={editText}
-                onChange={(e) => setEditText(e.target.value)}
-                onBlur={() => handleUpdateTodo(todo.id)}
-                onKeyPress={(e) =>
-                  e.key === "Enter" && handleUpdateTodo(todo.id)
-                }
-                autoFocus
-              />
-            ) : (
-              <StyledListItemText primary={todo.text} done={todo.done} />
-            )}
-            <ListItemSecondaryAction>
-              <IconButton
-                edge="end"
-                aria-label="edit"
-                onClick={() => handleEditTodo(todo.id)}
+    <PageBackground>
+      <AppContainer>
+        <Typography variant="h4" component="h1" gutterBottom>
+          Todo List
+        </Typography>
+        <TextField
+          fullWidth
+          variant="outlined"
+          label="New Todo"
+          value={newTodo}
+          onChange={(e) => setNewTodo(e.target.value)}
+          onKeyPress={(e) => e.key === "Enter" && handleAddTodo()}
+          autoFocus // Add this line to enable autofocus
+        />
+        <StyledButton
+          variant="contained"
+          color="primary"
+          fullWidth
+          onClick={handleAddTodo}
+        >
+          Add Todo
+        </StyledButton>
+        <List>
+          {todos.map((todo) => (
+            <ListItem key={todo.id} dense>
+              <Button
+                variant="contained"
+                size="small"
+                sx={{
+                  bgcolor: todo.done ? '#9575cd' : '#e0e0e0',
+                  color: 'white',
+                  minWidth: '90px',
+                  mr: 2,
+                  '&:hover': {
+                    bgcolor: todo.done ? '#7e57c2' : '#bdbdbd',
+                  }
+                }}
+                onClick={() => handleToggleTodo(todo.id)}
               >
-                <EditIcon />
-              </IconButton>
-              <IconButton
-                edge="end"
-                aria-label="delete"
-                onClick={() => handleDeleteTodo(todo.id)}
-              >
-                <DeleteIcon />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem>
-        ))}
-      </List>
-    </AppContainer>
+                {todo.done ? 'Готово!' : 'В процессе'}
+              </Button>
+              {editingId === todo.id ? (
+                <TextField
+                  fullWidth
+                  value={editText}
+                  onChange={(e) => setEditText(e.target.value)}
+                  onBlur={() => handleUpdateTodo(todo.id)}
+                  onKeyPress={(e) =>
+                    e.key === "Enter" && handleUpdateTodo(todo.id)
+                  }
+                  autoFocus
+                />
+              ) : (
+                <StyledListItemText primary={todo.text} done={todo.done} />
+              )}
+              <ListItemSecondaryAction>
+                <IconButton
+                  edge="end"
+                  aria-label="edit"
+                  onClick={() => handleEditTodo(todo.id)}
+                >
+                  <EditIcon />
+                </IconButton>
+                <IconButton
+                  edge="end"
+                  aria-label="delete"
+                  onClick={() => handleDeleteTodo(todo.id)}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </ListItemSecondaryAction>
+            </ListItem>
+          ))}
+        </List>
+      </AppContainer>
+    </PageBackground>
   );
 }
 
